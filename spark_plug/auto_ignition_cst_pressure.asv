@@ -1,0 +1,24 @@
+function dz = auto_ignition_cst_pressure(temperature,Yk)
+
+global n_species;
+global P;
+global Ck;
+global species_molar_mass;
+global tau;
+global T0;
+dz= zeros(n_species+1,1);
+rho = compute_density_from_pressure(P,temperature,Yk);
+
+Ck=rho*Yk'./species_molar_mass;
+
+wdot =  compute_species_production_rates(temperature,Ck);
+hk = compute_species_mass_enthalpy(temperature);
+hk0 = compute_species_mass_enthalpy(T0);
+cp = compute_mean_Cp(temperature,Yk);
+
+dz(2:10)= species_molar_mass .* wdot/rho;
+dz(1)=-sum(hk.*species_molar_mass.*wdot)/(rho*cp)+(1/(tau*cp))*(sum());
+
+% To complete ...
+
+end
